@@ -3,6 +3,7 @@ package com.dkd.manage.controller;
 import java.util.List;
 import javax.servlet.http.HttpServletResponse;
 
+import com.dkd.manage.domain.dto.ChannelConfigDto;
 import com.dkd.manage.domain.vo.ChannelVo;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -115,5 +116,14 @@ public class ChannelController extends BaseController
     {
         List<ChannelVo> volist = channelService.selectChannelVoListByInnerCode(innerCode);
         return success(volist);
+    }
+    /**
+     * 货道关联商品
+     */
+    @PreAuthorize("@ss.hasPermi('manage:channel:edit')")
+    @PutMapping("/config")
+    public AjaxResult setChannel(@RequestBody ChannelConfigDto channelConfigDto)
+    {
+        return toAjax(channelService.setChannel(channelConfigDto));
     }
 }
