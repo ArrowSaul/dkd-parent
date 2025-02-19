@@ -33,7 +33,22 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <include refid="selectSkuVo"/>
         where sku_id = #{skuId}
     </select>
-        
+    <insert id="insertSkus" parameterType="java.util.List" useGeneratedKeys="true" keyProperty="skuId">
+        insert into tb_sku
+        (sku_name, sku_image, brand_Name, unit, price, class_id)
+        values
+        <foreach collection="list" item="sku" separator=",">
+            (
+            #{sku.skuName},
+            #{sku.skuImage},
+            #{sku.brandName},
+            #{sku.unit},
+            #{sku.price},
+            #{sku.classId}
+            )
+        </foreach>
+    </insert>
+
     <insert id="insertSku" parameterType="Sku" useGeneratedKeys="true" keyProperty="skuId">
         insert into tb_sku
         <trim prefix="(" suffix=")" suffixOverrides=",">
