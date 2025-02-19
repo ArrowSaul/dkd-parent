@@ -17,6 +17,20 @@
         <result property="updateTime" column="update_time"/>
     </resultMap>
 
+    <resultMap type="ChannelVo" id="ChannelVoResult">
+        <result property="id" column="id"/>
+        <result property="channelCode" column="channel_code"/>
+        <result property="skuId" column="sku_id"/>
+        <result property="vmId" column="vm_id"/>
+        <result property="innerCode" column="inner_code"/>
+        <result property="maxCapacity" column="max_capacity"/>
+        <result property="currentCapacity" column="current_capacity"/>
+        <result property="lastSupplyTime" column="last_supply_time"/>
+        <result property="createTime" column="create_time"/>
+        <result property="updateTime" column="update_time"/>
+        <association property="sku" javaType="Sku" column="sku_id" select="com.dkd.manage.mapper.SkuMapper.selectSkuBySkuId"/>
+    </resultMap>
+
     <sql id="selectChannelVo">
         select id,
                channel_code,
@@ -53,6 +67,10 @@
         <foreach item="id" collection="array" open="(" separator="," close=")">
             #{id}
         </foreach>
+    </select>
+    <select id="selectChannelVoListByInnerCode" resultMap="ChannelVoResult">
+        <include refid="selectChannelVo"/>
+         where inner_code = #{innerCode}
     </select>
     <insert id="insertChannel" parameterType="Channel" useGeneratedKeys="true" keyProperty="id">insert into tb_channel
         <trim prefix="(" suffix=")" suffixOverrides=",">
