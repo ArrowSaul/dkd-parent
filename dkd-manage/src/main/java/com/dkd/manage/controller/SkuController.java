@@ -58,7 +58,7 @@ public class SkuController extends BaseController
     {
         List<Sku> list = skuService.selectSkuList(sku);
         ExcelUtil<Sku> util = new ExcelUtil<Sku>(Sku.class);
-        util.exportExcel(response, list, "商品管理数据");
+        util.exportEasyExcel(response, list, "商品管理数据");
     }
     /**
      * 导入商品管理列表
@@ -68,7 +68,7 @@ public class SkuController extends BaseController
     @PostMapping("/import")
     public AjaxResult excelImport(MultipartFile file) throws Exception {
         ExcelUtil<Sku> util = new ExcelUtil<Sku>(Sku.class);
-        List<Sku> skuList = util.importExcel(file.getInputStream());
+        List<Sku> skuList = util.importEasyExcel(file.getInputStream());
         return toAjax(skuService.insertSkus(skuList));
     }
     /**
