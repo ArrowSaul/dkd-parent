@@ -65,5 +65,11 @@ public interface ChannelMapper
      * @return 结果
      */
     public int batchInsertChannels(List<Channel> channelList);
-
+    /**
+     * 根据商品id集合查询货道数量
+     *
+     * @param skuIds
+     * @return 结果
+     */
+    int countChannelBySkuIds(Long[] skuIds);
 }

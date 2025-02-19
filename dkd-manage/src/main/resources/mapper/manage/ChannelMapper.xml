@@ -48,6 +48,12 @@
         <include refid="selectChannelVo"/>
         where id = #{id}
     </select>
+    <select id="countChannelBySkuIds" resultType="java.lang.Integer">
+        select count(1) from tb_channel where sku_id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </select>
     <insert id="insertChannel" parameterType="Channel" useGeneratedKeys="true" keyProperty="id">insert into tb_channel
         <trim prefix="(" suffix=")" suffixOverrides=",">
             <if test="channelCode != null and channelCode != ''">channel_code,</if>
