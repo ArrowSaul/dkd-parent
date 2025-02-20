@@ -180,6 +180,31 @@ public class TaskServiceImpl implements ITaskService {
         }
         return taskResult;
     }
+    /**
+     * 取消工单
+     *
+     * @param task
+     * @return 结果
+     */
+    @Override
+    public int cancelTask(Task task) {
+        //1. 判断工单状态是否可取消
+        // 先根据工单ID查询数据库
+        Task taskDb = taskMapper.selectTaskByTaskId(task.getTaskId());
+        // 判断工单状态是否已取消，如果已取消，直接抛出异常
+        if (taskDb.getTaskStatus().equals(DkdContants.TASK_STATUS_CANCEL)) {
+            throw new SecurityException("该工单已取消，不能再次取消");
+        }
+        // 判断工单状态是否已完成，如果已完成，直接抛出异常
+        if (taskDb.getTaskStatus().equals(DkdContants.TASK_STATUS_FINISH)) {
+            throw new SecurityException("该工单已完成，不能取消");
+        }
+        //2. 更新字段
+        task.setTaskStatus(DkdContants.TASK_STATUS_CANCEL);// 取消工单
+        task.setUpdateTime(DateUtils.getNowDate());// 更新时间
+        //3. 更新工单
+        return taskMapper.updateTask(task);
+    }
 
     // 生成并获取当天的工单编号（唯一标识）
 //    private String generateTaskCode() {
