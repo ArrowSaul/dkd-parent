@@ -2,6 +2,10 @@ package com.dkd.manage.controller;
 
 import java.util.List;
 import javax.servlet.http.HttpServletResponse;
+
+import com.dkd.common.constant.DkdContants;
+import com.dkd.manage.domain.VendingMachine;
+import com.dkd.manage.service.IVendingMachineService;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -33,6 +37,8 @@ public class EmpController extends BaseController
 {
     @Autowired
     private IEmpService empService;
+    @Autowired
+    private IVendingMachineService vendingMachineService;
 
     /**
      * 查询人员列表列表
@@ -100,5 +106,25 @@ public class EmpController extends BaseController
     public AjaxResult remove(@PathVariable Long[] ids)
     {
         return toAjax(empService.deleteEmpByIds(ids));
+    }
+    /**
+     * 根据售货机获取运营人员列表
+     */
+    @PreAuthorize("@ss.hasPermi('manage:emp:list')")
+    @GetMapping("/businessList/{innerCode}")
+    public AjaxResult businessList(@PathVariable("innerCode") String innerCode)
+    {
+        //1. 根据innerCode查询售货机信息
+        VendingMachine vendingMachine = vendingMachineService.selectVendingMachineByInnerCode(innerCode);
+        if(vendingMachine == null){
+            return error("售货机不存在");
+        }
+        //2. 根据区域id，角色编号，员工状态查询运营人员列表
+        Emp emp = new Emp();
+        emp.setRegionId(vendingMachine.getRegionId());//区域id
+        emp.setRoleCode(DkdContants.ROLE_CODE_BUSINESS);//运营人员角色编号
+        emp.setStatus(DkdContants.EMP_STATUS_NORMAL);//员工状态
+        List<Emp> empList = empService.selectEmpList(emp);
+        return success(empList);
     }
 }
