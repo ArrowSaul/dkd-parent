@@ -108,7 +108,7 @@ public class EmpController extends BaseController
         return toAjax(empService.deleteEmpByIds(ids));
     }
     /**
-     * 根据售货机获取运营人员列表
+     * 根据售货机编号获取运营人员列表
      */
     @PreAuthorize("@ss.hasPermi('manage:emp:list')")
     @GetMapping("/businessList/{innerCode}")
@@ -123,7 +123,27 @@ public class EmpController extends BaseController
         Emp emp = new Emp();
         emp.setRegionId(vendingMachine.getRegionId());//区域id
         emp.setRoleCode(DkdContants.ROLE_CODE_BUSINESS);//运营人员角色编号
-        emp.setStatus(DkdContants.EMP_STATUS_NORMAL);//员工状态
+        emp.setStatus(DkdContants.EMP_STATUS_NORMAL);//员工状态启用
+        List<Emp> empList = empService.selectEmpList(emp);
+        return success(empList);
+    }
+    /**
+     * 根据售货机编号获取运维人员列表
+     */
+    @PreAuthorize("@ss.hasPermi('manage:emp:list')")
+    @GetMapping("/operationList/{innerCode}")
+    public AjaxResult operationList(@PathVariable("innerCode") String innerCode)
+    {
+        //1. 根据innerCode查询售货机信息
+        VendingMachine vendingMachine = vendingMachineService.selectVendingMachineByInnerCode(innerCode);
+        if(vendingMachine == null){
+            return error("售货机不存在");
+        }
+        //2. 根据区域id，角色编号，员工状态查询运维人员列表
+        Emp emp = new Emp();
+        emp.setRegionId(vendingMachine.getRegionId());//区域id
+        emp.setRoleCode(DkdContants.ROLE_CODE_OPERATOR);//运维人员角色编号
+        emp.setStatus(DkdContants.EMP_STATUS_NORMAL);//员工状态启用
         List<Emp> empList = empService.selectEmpList(emp);
         return success(empList);
     }
