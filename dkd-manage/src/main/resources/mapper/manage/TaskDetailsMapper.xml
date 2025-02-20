@@ -34,7 +34,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <include refid="selectTaskDetailsVo"/>
         where details_id = #{detailsId}
     </select>
-        
+
     <insert id="insertTaskDetails" parameterType="TaskDetails" useGeneratedKeys="true" keyProperty="detailsId">
         insert into tb_task_details
         <trim prefix="(" suffix=")" suffixOverrides=",">
@@ -54,6 +54,22 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="skuImage != null">#{skuImage},</if>
          </trim>
     </insert>
+
+    <insert id="batchInsertTaskDetails" parameterType="java.util.List">
+        insert into tb_task_details (task_id, channel_code, expect_capacity, sku_id, sku_name, sku_image)
+        values
+        <foreach collection="list" item="item" separator=",">
+            (
+            #{item.taskId},
+            #{item.channelCode},
+            #{item.expectCapacity},
+            #{item.skuId},
+            #{item.skuName},
+            #{item.skuImage}
+            )
+        </foreach>
+    </insert>
+
 
     <update id="updateTaskDetails" parameterType="TaskDetails">
         update tb_task_details

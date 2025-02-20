@@ -90,4 +90,14 @@ public class TaskDetailsServiceImpl implements ITaskDetailsService
     {
         return taskDetailsMapper.deleteTaskDetailsByDetailsId(detailsId);
     }
+    /**
+     * 批量新增工单详情
+     *
+     * @param taskDetailsList
+     * @return 结果
+     */
+    @Override
+    public int batchInsertTaskDetails(List<TaskDetails> taskDetailsList) {
+        return taskDetailsMapper.batchInsertTaskDetails(taskDetailsList);
+    }
 }
