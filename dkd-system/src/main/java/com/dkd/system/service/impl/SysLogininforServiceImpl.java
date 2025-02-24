@@ -1,6 +1,8 @@
 package com.dkd.system.service.impl;
 
 import java.util.List;
+
+import com.dkd.common.annotation.DataScope;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.dkd.system.domain.SysLogininfor;
@@ -36,6 +38,7 @@ public class SysLogininforServiceImpl implements ISysLogininforService
      * @param logininfor 访问日志对象
      * @return 登录记录集合
      */
+    @DataScope(deptAlias = "d", userAlias = "u")
     @Override
     public List<SysLogininfor> selectLogininforList(SysLogininfor logininfor)
     {

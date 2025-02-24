@@ -51,6 +51,30 @@ public class SysLogininfor extends BaseEntity
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     @Excel(name = "访问时间", width = 30, dateFormat = "yyyy-MM-dd HH:mm:ss")
     private Date loginTime;
+    // 用户id
+    private Long userId;
+    // 部门id
+    private Long deptId;
+
+    public Long getUserId()
+    {
+        return userId;
+    }
+
+    public Long getDeptId()
+    {
+        return deptId;
+    }
+
+    public void setUserId(Long userId)
+    {
+        this.userId = userId;
+    }
+
+    public void setDeptId(Long deptId)
+    {
+        this.deptId = deptId;
+    }
 
     public Long getInfoId()
     {

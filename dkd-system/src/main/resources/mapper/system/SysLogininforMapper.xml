@@ -17,12 +17,16 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	</resultMap>
 
 	<insert id="insertLogininfor" parameterType="SysLogininfor">
-		insert into sys_logininfor (user_name, status, ipaddr, login_location, browser, os, msg, login_time)
-		values (#{userName}, #{status}, #{ipaddr}, #{loginLocation}, #{browser}, #{os}, #{msg}, sysdate())
+		insert into sys_logininfor (user_name, status, ipaddr, login_location, browser, os, msg, login_time, user_id, dept_id)
+		values (#{userName}, #{status}, #{ipaddr}, #{loginLocation}, #{browser}, #{os}, #{msg}, sysdate(), #{userId}, #{deptId})
 	</insert>
 	
 	<select id="selectLogininforList" parameterType="SysLogininfor" resultMap="SysLogininforResult">
-		select info_id, user_name, ipaddr, login_location, browser, os, status, msg, login_time from sys_logininfor
+		select l.info_id, l.user_name, l.ipaddr, l.login_location, l.browser, l.os, l.status, l.msg, l.login_time
+		, u.user_id, d.dept_id
+		from sys_logininfor l
+		left join sys_dept d on l.dept_id = d.dept_id
+		left join sys_user u on l.user_id = u.user_id
 		<where>
 			<if test="ipaddr != null and ipaddr != ''">
 				AND ipaddr like concat('%', #{ipaddr}, '%')
@@ -39,6 +43,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 			<if test="params.endTime != null and params.endTime != ''"><!-- 结束时间检索 -->
 				AND login_time &lt;= #{params.endTime}
 			</if>
+			${params.dataScope}
 		</where>
 		order by info_id desc
 	</select>
